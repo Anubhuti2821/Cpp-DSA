@@ -1,0 +1,56 @@
+// This function finds all root-to-leaf paths in a binary tree using a DFS approach.
+The key idea is that we build a string (path) step-by-step as we go down the tree.
+
+TIME COMPLEXITY = O(n)
+SPACE COMPLEXITY = O(n)
+
+
+CODE
+class Solution {
+public:
+     void  path(TreeNode* root , string p , vector<string>&ans){
+        if(root == NULL){
+            return;
+        }
+        if(root->left == NULL && root->right == NULL){
+            ans.push_back(p);
+            return;
+        }
+        if(root->left){
+            path(root->left, p + "->" + to_string(root->left->val) , ans );
+        }
+        if(root->right){
+            path(root->right , p + "->" + to_string(root->right->val) , ans);
+        }
+     }
+
+ 
+    vector<string> binaryTreePaths(TreeNode* root) {
+     vector<string>ans;
+     string p = to_string(root->val);
+        path( root , p , ans);
+        return ans;
+
+        
+    }
+};
+
+
+A MAJOR CONCEPTUAL DOUBT WHILE SOLVING
+Since the path is passed by value, each recursive call gets its own copy of the path. 
+In other words, changes made in one call do not affect the path in another call. This ensures that after exploring one branch,
+we still have the original path intact when we return and explore another branch. 
+As a result, we collect all the paths without needing to manually reset anything.
+Thus, this approach is efficient and keeps each branch’s exploration independent.
+ex - // This function finds all root-to-leaf paths in a binary tree using a DFS approach. The key idea is that we build a
+string (path) step-by-step as we go down the tree. Since the path is passed by value, each recursive call has its own copy of
+the path. For example, consider a tree like this: 
+//       1
+//      / \
+//     2   3
+//      \
+//       5
+// If we start from node 1, we append '1' to the path. Then we go left: we append '2'. We go left again, but no left child 
+exists, so we move right. We append '5'. Thus, the path is "1->2->5". Similarly, we also explore the right subtree from node
+1, appending '3'. Each call's path is separate, so after one branch ends, the original path for the parent call stays unchanged.
+This ensures that when we backtrack, we still have the right path for other branches.
