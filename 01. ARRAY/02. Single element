@@ -1,0 +1,31 @@
+```cpp
+/*
+Problem:
+Given a non-empty integer array nums, every element appears twice except for one.
+Find and return that single element.
+
+Approach:
+- Initialize a variable ans as 0.
+- Traverse the array and perform XOR with each element.
+- XOR of a number with itself is 0, and XOR of 0 with a number is the number itself.
+- Since every duplicate element cancels out, only the unique element remains.
+*/
+
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int ans = 0;
+
+        for (int i : nums) {
+            ans ^= i;
+        }
+
+        return ans;
+    }
+};
+
+/*
+Time Complexity: O(n)
+Space Complexity: O(1)
+*/
+```
