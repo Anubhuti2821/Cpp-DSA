@@ -1,0 +1,73 @@
+/*
+Problem: Binary Tree Morris Inorder Traversal
+
+Description:
+Given the root of a binary tree, return its inorder traversal without using
+recursion or an explicit stack.
+
+Approach:
+1. Initialize a pointer `curr` to the root.
+2. While `curr` is not NULL:
+   - If there is no left child:
+       - Visit the current node.
+       - Move to the right child.
+   - Otherwise:
+       - Find the inorder predecessor (rightmost node in the left subtree).
+       - If the predecessor's right pointer is NULL:
+           - Create a temporary thread from the predecessor to the current node.
+           - Move to the left child.
+       - Otherwise:
+           - Remove the temporary thread.
+           - Visit the current node.
+           - Move to the right child.
+3. Continue until all nodes are visited.
+
+Why Morris Traversal?
+- Does not use recursion.
+- Does not use an explicit stack.
+- Temporarily modifies the tree by creating threads, which are restored before
+  the traversal ends.
+*/
+
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> ans;
+        TreeNode* curr = root;
+
+        while (curr != NULL) {
+
+            if (curr->left == NULL) {
+                ans.push_back(curr->val);
+                curr = curr->right;
+            }
+            else {
+                TreeNode* pred = curr->left;
+
+                while (pred->right != NULL && pred->right != curr) {
+                    pred = pred->right;
+                }
+
+                if (pred->right == NULL) {
+                    pred->right = curr;
+                    curr = curr->left;
+                }
+                else {
+                    pred->right = NULL;
+                    ans.push_back(curr->val);
+                    curr = curr->right;
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+
+/*
+Time Complexity: O(N)
+- Every edge is traversed at most twice.
+
+Space Complexity: O(1)
+- No recursion or auxiliary stack is used.
+*/
