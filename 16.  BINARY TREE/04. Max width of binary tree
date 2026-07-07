@@ -1,0 +1,68 @@
+/*
+Problem: Maximum Width of Binary Tree (LeetCode 662)
+
+Description:
+Given the root of a binary tree, return the maximum width among all levels.
+The width of a level is defined as the length between the leftmost and
+rightmost non-null nodes (inclusive), considering the tree as a complete
+binary tree.
+
+Approach:
+1. Perform a level-order traversal (BFS).
+2. Assign each node an index as if the tree were a complete binary tree.
+   - Root = 0
+   - Left Child = 2 * index + 1
+   - Right Child = 2 * index + 2
+3. At each level, normalize the indices by subtracting the first index of
+   that level to prevent overflow.
+4. The width of the current level is:
+      lastIndex - firstIndex + 1
+5. Keep track of the maximum width across all levels.
+*/
+
+class Solution {
+public:
+    int widthOfBinaryTree(TreeNode* root) {
+        if (root == NULL)
+            return 0;
+
+        unsigned long long maxWidth = 0;
+        queue<pair<TreeNode*, unsigned long long>> q;
+        q.push({root, 0});
+
+        while (!q.empty()) {
+            int size = q.size();
+            unsigned long long minIndex = q.front().second;
+
+            unsigned long long first, last;
+
+            for (int i = 0; i < size; i++) {
+                TreeNode* curr = q.front().first;
+                unsigned long long idx = q.front().second - minIndex;// to prevent overflow
+                q.pop();
+
+                if (i == 0)
+                    first = idx;
+                if (i == size - 1)
+                    last = idx;
+
+                if (curr->left)
+                    q.push({curr->left, 2 * idx + 1});
+
+                if (curr->right)
+                    q.push({curr->right, 2 * idx + 2});
+            }
+
+            maxWidth = max(maxWidth, last - first + 1);
+        }
+
+        return (int)maxWidth;
+    }
+};
+
+/*
+Time Complexity: O(N)
+Space Complexity: O(N)
+
+where N is the number of nodes in the binary tree.
+*/
