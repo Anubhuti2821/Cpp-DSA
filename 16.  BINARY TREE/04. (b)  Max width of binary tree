@@ -43,7 +43,7 @@ public:
 
                 if (i == 0)
                     first = idx;
-                if (i == size - 1)
+                if (i == size - 1)  //TO ENSURE KI FIRST ELEMENT KO INDEX I PR LAST KO SIZE -1 MILEE
                     last = idx;
 
                 if (curr->left)
@@ -65,4 +65,13 @@ Time Complexity: O(N)
 Space Complexity: O(N)
 
 where N is the number of nodes in the binary tree.
+*/
+/*
+Possible Optimization:
+- Instead of checking every number from 1 to n, iterate only up to √n.
+- Whenever i divides n, both i and n/i are divisors.
+- Store them separately and sort the final answer if required.
+
+Optimal Time Complexity: O(√N)
+Space Complexity: O(K)
 */
