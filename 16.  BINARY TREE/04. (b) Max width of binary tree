@@ -1,0 +1,99 @@
+# Why do we normalize indices in `Maximum Width of Binary Tree`?
+
+In this problem, we assign each node an index as if the tree were a complete binary tree.
+
+For **0-based indexing**:
+
+* Root → `0`
+* Left child → `2 * index + 1`
+* Right child → `2 * index + 2`
+
+For example:
+
+```text
+        1(0)
+       /    \
+    2(1)    3(2)
+    /         \
+ 4(3)         7(6)
+```
+
+The width of a level is calculated as:
+
+```cpp
+width = lastIndex - firstIndex + 1;
+```
+
+## The Problem
+
+As the tree becomes deeper, the indices grow very quickly:
+
+```text
+0
+1 2
+3 4 5 6
+7 8 9 ...
+...
+```
+
+After many levels, the indices can become extremely large and may overflow, even when using `unsigned long long`.
+
+## The Solution: Normalize the Indices
+
+At the beginning of every level, store the index of the first node:
+
+```cpp
+unsigned long long start = q.front().second;
+```
+
+Then, for every node in that level, use:
+
+```cpp
+unsigned long long idx = q.front().second - start;
+```
+
+Instead of using the original index, we use this normalized index when generating the children:
+
+```cpp
+left  = 2 * idx + 1;
+right = 2 * idx + 2;
+```
+
+## Why does this work?
+
+Suppose the indices of a level are:
+
+```text
+100 101 102
+```
+
+The width is:
+
+```text
+102 - 100 + 1 = 3
+```
+
+Now subtract `100` (the first index) from every index:
+
+```text
+0 1 2
+```
+
+The width becomes:
+
+```text
+2 - 0 + 1 = 3
+```
+
+The width is exactly the same because every index is shifted by the same amount.
+
+## Benefits of Normalization
+
+* Prevents integer overflow on very deep trees.
+* Keeps the indices small at every level.
+* Does not affect the width calculation.
+* This is the standard approach used in most editorial and interview solutions.
+
+## Key Idea
+
+We are **not changing the relative positions of the nodes**. We are only resetting the first node of each level to index `0`. Since all indices are shifted equally, the computed width remains unchanged while the numbers stay small and safe from overflow.
