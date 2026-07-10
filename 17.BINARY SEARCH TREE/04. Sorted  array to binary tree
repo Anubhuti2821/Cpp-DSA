@@ -1,0 +1,42 @@
+/*
+Problem: 108. Convert Sorted Array to Binary Search Tree
+
+Description:
+Given an integer array nums where the elements are sorted in ascending order,
+convert it to a height-balanced Binary Search Tree (BST).
+
+Approach:
+- Find the middle element of the current subarray and make it the root.
+- Recursively construct the left subtree from the left half.
+- Recursively construct the right subtree from the right half.
+- This ensures the BST remains height-balanced.
+*/
+
+class Solution {
+public:
+    TreeNode* helper(const vector<int>& nums, int st, int end) {
+        if (st > end)
+            return nullptr;
+
+        int mid = st + (end - st) / 2;
+
+        TreeNode* root = new TreeNode(nums[mid]);
+        root->left = helper(nums, st, mid - 1);
+        root->right = helper(nums, mid + 1, end);
+
+        return root;
+    }
+
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return helper(nums, 0, nums.size() - 1);
+    }
+};
+
+/*
+Time Complexity: O(n)
+Space Complexity: O(log n)
+
+Possible Optimization:
+This is already the optimal approach. Passing the vector by const reference
+avoids unnecessary copying while maintaining O(n) time complexity.
+*/
